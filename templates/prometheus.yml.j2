@@ -1,5 +1,9 @@
 global:
   scrape_interval: 15s
+  external_labels:
+    dc: "{{ dc }}"
+    env: "{{ env }}"
+    owner: "{{ owner }}"
 
 scrape_configs:
   - job_name: 'vmagent'
@@ -9,9 +13,9 @@ scrape_configs:
   - job_name: 'victoriametrics-cluster'
     static_configs:
       - targets:
-        - 'localhost:{{ vmstorage_port }}'
-        - 'localhost:{{ vminsert_port }}'
-        - 'localhost:{{ vmselect_port }}'
+          - 'localhost:{{ vmstorage_port }}'
+          - 'localhost:{{ vminsert_port }}'
+          - 'localhost:{{ vmselect_port }}'
 
   - job_name: 'node_exporter'
     static_configs:
