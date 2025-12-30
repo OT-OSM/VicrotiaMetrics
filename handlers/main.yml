@@ -10,4 +10,5 @@
     - vmselect
     - vmagent
     - vmalert
-  ignore_errors: true # Ignore if service doesn't exist on this node
+  when: item is defined
+  ignore_errors: true
