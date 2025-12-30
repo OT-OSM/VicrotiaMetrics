@@ -98,7 +98,7 @@
     enabled: yes
   when: inventory_hostname in vm_alert_nodes
 
-  - name: Render vmagent scrape config
+- name: Render vmagent scrape config
   template:
     src: prometheus.yml.j2
     dest: /var/lib/victoria-metrics-cluster/prometheus.yml
