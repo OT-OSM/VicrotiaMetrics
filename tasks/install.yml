@@ -1,0 +1,55 @@
+---
+- name: Create VictoriaMetrics group
+  group:
+    name: "{{ vm_group }}"
+    state: present
+
+- name: Create VictoriaMetrics user
+  user:
+    name: "{{ vm_user }}"
+    group: "{{ vm_group }}"
+    shell: /bin/false
+    system: yes
+
+- name: Create installation directory
+  file:
+    path: "{{ vm_install_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Create data directory
+  file:
+    path: "{{ vm_data_dir }}"
+    state: directory
+    owner: "{{ vm_user }}"
+    group: "{{ vm_group }}"
+    mode: "0755"
+
+- name: Download and unarchive VictoriaMetrics Cluster
+  unarchive:
+    src: "{{ vm_cluster_download_url }}"
+    dest: "{{ vm_install_dir }}"
+    remote_src: yes
+    creates: "{{ vm_install_dir }}/vmstorage-prod"
+  notify: restart victoriametrics cluster
+
+- name: Download and unarchive VictoriaMetrics Utils (vmagent)
+  unarchive:
+    src: "{{ vm_utils_download_url }}"
+    dest: "{{ vm_install_dir }}"
+    remote_src: yes
+    creates: "{{ vm_install_dir }}/vmagent-prod"
+  notify: restart victoriametrics cluster
+
+- name: Set permissions on binaries
+  file:
+    path: "{{ vm_install_dir }}/{{ item }}"
+    owner: "{{ vm_user }}"
+    group: "{{ vm_group }}"
+    mode: "0755"
+  loop:
+    - vmstorage-prod
+    - vminsert-prod
+    - vmselect-prod
+    - vmagent-prod
+    - vmalert-prod

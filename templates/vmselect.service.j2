@@ -1,0 +1,20 @@
+[Unit]
+Description=VictoriaMetrics Select Node
+After=network.target
+
+[Service]
+Type=simple
+User={{ vm_user }}
+Group={{ vm_group }}
+ExecStart={{ vm_install_dir }}/vmselect-prod \
+  -httpListenAddr=:{{ vmselect_port }} \
+  {% for node in vm_storage_nodes %}
+  -storageNode={{ node }}:8401 \
+  {% endfor %}
+  -dedup.minScrapeInterval=1ms
+
+Restart=always
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

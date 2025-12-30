@@ -1,0 +1,22 @@
+[Unit]
+Description=VictoriaMetrics Alert
+After=network.target
+
+[Service]
+Type=simple
+User={{ vm_user }}
+Group={{ vm_group }}
+WorkingDirectory={{ vm_data_dir }}
+ExecStart={{ vm_install_dir }}/vmalert-prod \
+  -datasource.url=http://localhost:{{ vmselect_port }}/select/0/prometheus/ \
+  -remoteWrite.url=http://localhost:{{ vminsert_port }}/insert/0/prometheus/ \
+  -remoteRead.url=http://localhost:{{ vmselect_port }}/select/0/prometheus/ \
+  -notifier.url=http://localhost:9093/ \
+  -rule={{ vm_data_dir }}/alerts.yml \
+  -httpListenAddr=:{{ vmalert_port }}
+
+Restart=always
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

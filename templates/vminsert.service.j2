@@ -1,0 +1,19 @@
+[Unit]
+Description=VictoriaMetrics Insert Node
+After=network.target
+
+[Service]
+Type=simple
+User={{ vm_user }}
+Group={{ vm_group }}
+ExecStart={{ vm_install_dir }}/vminsert-prod \
+  -httpListenAddr=:{{ vminsert_port }} \
+  {% for node in vm_storage_nodes %}
+  -storageNode={{ node }}:8400 \
+  {% endfor %}
+
+Restart=always
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

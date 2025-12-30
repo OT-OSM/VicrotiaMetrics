@@ -1,0 +1,6 @@
+---
+- name: Install VictoriaMetrics Cluster components
+  import_tasks: install.yml
+
+- name: Configure VictoriaMetrics Cluster services
+  import_tasks: configure.yml

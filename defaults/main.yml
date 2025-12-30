@@ -1,0 +1,34 @@
+---
+# Defaults for VictoriaMetrics Cluster
+
+vm_version: "v1.101.0"
+vm_cluster_download_url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/{{ vm_version }}/victoria-metrics-linux-amd64-{{ vm_version }}-cluster.tar.gz"
+vm_utils_download_url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/{{ vm_version }}/vmutils-linux-amd64-{{ vm_version }}.tar.gz"
+
+# Directories
+vm_install_dir: "/usr/local/bin"
+vm_data_dir: "/var/lib/victoria-metrics-cluster"
+
+# User/Group
+vm_user: "victoriametrics"
+vm_group: "victoriametrics"
+
+# Ports
+vmstorage_port: 8482
+vminsert_port: 8480
+vmselect_port: 8481
+vmagent_port: 8429
+
+# Retention
+vmstorage_retention: "1w"
+
+# Service Configuration
+# These lists can be overridden in inventory to distribute components
+vm_storage_nodes: "{{ groups['vmstorage'] | default(['localhost']) }}"
+vm_insert_nodes: "{{ groups['vminsert'] | default(['localhost']) }}"
+vm_select_nodes: "{{ groups['vmselect'] | default(['localhost']) }}"
+vm_agent_nodes: "{{ groups['vmagent'] | default(['localhost']) }}"
+vm_alert_nodes: "{{ groups['vmalert'] | default(['localhost']) }}"
+
+# Alerting
+vmalert_port: 8880

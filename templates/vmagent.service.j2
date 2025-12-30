@@ -1,0 +1,19 @@
+[Unit]
+Description=VictoriaMetrics Agent
+After=network.target
+
+[Service]
+Type=simple
+User={{ vm_user }}
+Group={{ vm_group }}
+WorkingDirectory={{ vm_data_dir }}
+ExecStart={{ vm_install_dir }}/vmagent-prod \
+  -promscrape.config={{ vm_data_dir }}/prometheus.yml \
+  -remoteWrite.url=http://localhost:{{ vminsert_port }}/insert/0/prometheus/ \
+  -httpListenAddr=:{{ vmagent_port }} 
+
+Restart=always
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+---
+- name: restart victoriametrics cluster
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    daemon_reload: yes
+  loop:
+    - vmstorage
+    - vminsert
+    - vmselect
+    - vmagent
+    - vmalert
+  ignore_errors: true # Ignore if service doesn't exist on this node
